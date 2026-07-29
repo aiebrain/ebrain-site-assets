@@ -36,6 +36,23 @@
       });
     }, { threshold: 0.12 });
     reveals.forEach(function (el) { io.observe(el); });
+
+    /* (02) THE BOOK 아코디언 토글 */
+    var row = document.getElementById('book-toggle');
+    var panel = document.getElementById('book-panel');
+    if (row && panel) {
+      row.addEventListener('click', function () {
+        panel.classList.toggle('open');
+        row.classList.toggle('on');
+      });
+      /* 히어로의 "전자책 살펴보기" 앵커 클릭 시 자동으로 펼침 */
+      document.querySelectorAll('a[href="#book"]').forEach(function (a) {
+        a.addEventListener('click', function () {
+          panel.classList.add('open');
+          row.classList.add('on');
+        });
+      });
+    }
   }
   boot();
 })();
