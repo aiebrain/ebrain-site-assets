@@ -28,10 +28,10 @@
 
     function isMobile() { return window.matchMedia('(max-width: 640px)').matches; }
     function rowSize() {
-      return isMobile() ? 'clamp(1.3rem, 7.2vw, 2.3rem)' : 'clamp(1.9rem, 5.6vh, 3.8rem)';
+      return isMobile() ? 'clamp(1.4rem, 7vw, 2.4rem)' : 'clamp(2.3rem, 7vh, 4.7rem)';
     }
     function rowGap() {
-      return isMobile() ? 'clamp(0.3rem, 2vw, 0.55rem)' : 'clamp(0.5rem, 1.2vw, 1rem)';
+      return isMobile() ? 'clamp(0.18rem, 1.2vw, 0.38rem)' : 'clamp(0.35rem, 0.9vw, 0.85rem)';
     }
 
     var timers = [];
@@ -46,15 +46,14 @@
       document.body.style.overflow = '';
     }
 
-    /* 모바일에서 한 줄 폭이 넘치면 가로로 눌러 맞춘다 */
+    /* 한 줄 폭이 뷰포트를 넘으면 가로로 눌러 맞춘다 (문장이 원본보다 길어 전 해상도 가드) */
     function fitRow() {
       texts.style.transformOrigin = 'center center';
       texts.style.transform = 'none';
-      if (!isMobile()) return;
       var cs = getComputedStyle(texts);
       var gap = parseFloat(cs.columnGap || cs.gap) || 0;
       var w = lines.reduce(function (s, l) { return s + l.offsetWidth; }, 0) + gap * (lines.length - 1);
-      var avail = Math.max(280, window.innerWidth - 20);
+      var avail = Math.max(280, window.innerWidth - 24);
       if (w > avail) texts.style.transform = 'scaleX(' + (avail / w) + ')';
     }
 
@@ -71,8 +70,8 @@
         l.style.transition = 'none';
         l.style.transform = 'none';
         l.style.fontSize = rowSize();
-        l.style.letterSpacing = isMobile() ? '0.01em' : '0.06em';
-        l.style.textIndent = isMobile() ? '0.01em' : '0.06em';
+        l.style.letterSpacing = isMobile() ? '0.015em' : '0.16em';
+        l.style.textIndent = isMobile() ? '0.015em' : '0.16em';
       });
       fitRow();
 
