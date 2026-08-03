@@ -180,7 +180,18 @@
       fitRow();
     });
 
-    try { runSequence(); } catch (e) { enterSite(); }
+    /* CRO v3 (2026-08-03): 인트로는 세션당 1회만 재생 — 상품 페이지에서 돌아올 때 즉시 본문 */
+    var introSeen = false;
+    try { introSeen = !!sessionStorage.getItem('rtIntroSeen'); } catch (e) {}
+    if (introSeen) {
+      entered = true;
+      intro.style.transition = 'none';
+      intro.classList.add('gone');
+      if (cursor) cursor.style.display = 'none';
+    } else {
+      try { sessionStorage.setItem('rtIntroSeen', '1'); } catch (e) {}
+      try { runSequence(); } catch (e) { enterSite(); }
+    }
 
     /* ---- 스크롤 리빌 ---- */
     var io = new IntersectionObserver(function (entries) {
