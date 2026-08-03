@@ -94,32 +94,33 @@
 
     function runSequence() {
       lockScroll();
+      /* CRO v2 (2026-08-03): 시퀀스 7.3초→2.6초 압축 + 클릭 강제 제거(자동 입장).
+         클릭·휠·터치는 언제든 즉시 입장. */
       /* Phase 0 — 아웃라인 글자가 아래에서 순차 등장 */
-      at(300,  function () { lines[0].classList.add('is-in'); });
-      at(560,  function () { lines[1].classList.add('is-in'); });
-      at(820,  function () { lines[2].classList.add('is-in'); });
-      at(1080, function () { lines[3].classList.add('is-in'); });
+      at(150, function () { lines[0].classList.add('is-in'); });
+      at(300, function () { lines[1].classList.add('is-in'); });
+      at(450, function () { lines[2].classList.add('is-in'); });
+      at(600, function () { lines[3].classList.add('is-in'); });
       /* Phase 1 — 한 줄씩 흰색으로 점등 */
-      at(1900, function () { lines[0].classList.add('text-stroke-active'); });
-      at(2600, function () { lines[1].classList.add('text-stroke-active'); });
-      at(3300, function () { lines[2].classList.add('text-stroke-active'); });
-      at(4000, function () { lines[3].classList.add('text-stroke-active'); });
+      at(900,  function () { lines[0].classList.add('text-stroke-active'); });
+      at(1100, function () { lines[1].classList.add('text-stroke-active'); });
+      at(1300, function () { lines[2].classList.add('text-stroke-active'); });
+      at(1500, function () { lines[3].classList.add('text-stroke-active'); });
       /* Phase 2 — 가로 한 줄로 재배열 */
-      at(5200, rearrangeToRow);
-      /* Phase 3 — 서브 태그라인 상승 */
-      at(6400, function () {
+      at(1900, rearrangeToRow);
+      /* Phase 3 — 서브 태그라인 + 입장 힌트 동시 상승 */
+      at(2400, function () {
         define.style.opacity = '1';
         define.style.transform = 'translateY(0)';
-      });
-      /* Phase 4 — 입장 CTA + 글자 호버 점등 활성화 */
-      at(7100, function () {
         enterHint.style.opacity = '1';
         enterHint.style.transform = 'translateY(0)';
       });
-      at(7300, function () {
+      at(2600, function () {
         lines.forEach(function (l) { l.style.transition = ''; });
         texts.classList.add('intro-ready');
       });
+      /* Phase 4 — 자동 입장 (클릭 불필요) */
+      at(3200, enterSite);
     }
 
     /* 클릭 입장: 인트로 콘텐츠가 먼지처럼 흩어지며 본문 공개 */
@@ -170,6 +171,8 @@
     });
     intro.addEventListener('mouseleave', function () { if (cursor) cursor.style.opacity = '0'; });
     intro.addEventListener('click', enterSite);
+    window.addEventListener('wheel', enterSite, { once: true, passive: true });
+    window.addEventListener('touchmove', enterSite, { once: true, passive: true });
     window.addEventListener('resize', function () {
       if (entered || !texts.classList.contains('is-row')) return;
       lines.forEach(function (l) { l.style.fontSize = rowSize(); });
